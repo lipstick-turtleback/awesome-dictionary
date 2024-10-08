@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Awesome Dictionary</title>
+  </head>
+  <body>
+    <h1>Awesome Metso Dictionary v0.1.4</h1>
+    
+    <input type="file" id="csvFileInput" accept=".csv" />
+    <button onclick="loadCSV()">Load CSV</button>
+
+    <hr/>
+
+    <input type="text" id="searchInput" placeholder="Enter English word" />
+    <button onclick="searchWord()">Search</button>
+    <p id="searchResult"></p>
+
+    <script>
+      let parsedDictionary = {};
+
+      // Function to load CSV file into memory
+      function loadCSV() {
+        console.log('loadCSV start');
+
+        const fileInput = document.getElementById("csvFileInput");
+        const searchResult = document.getElementById("searchResult");
+
+        if (fileInput.files.length === 0) {
+          alert("Please select a CSV file first.");
+          return;
+        }
+
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        // Process the file once it's read
+        reader.onload = function (event) {
+          const csvData = event.target.result;
+          parsedDictionary = parseCSV(csvData);
+          searchResult.textContent = ""; // Clear search result
+        };
+
+        reader.readAsText(file);
+
+        console.log('loadCSV end');
+      }
+
+      // Function to parse CSV data into a dictionary
+      function parseCSV(data) {
+        console.log('parse csv start');
+        const rows = data.trim().split("\n");
+        const dictionary = {};
+
+        rows.forEach((row) => {
+          const [english, russian] = row.split(",").map((item) => item.trim());
+          if (english && russian) {
+            dictionary[english] = russian;
+          }
+        });
+
+        console.log('parse csv end');
+
+        alert(`${Object.keys(dictionary).length} records parsed!`);
+
+        return dictionary;
+      }
+
+      // Function to search for an English word and return its Russian translation
+      function searchWord() {
+        const searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
+        const searchResult = document.getElementById("searchResult");
+
+        if (searchInput === "") {
+          searchResult.textContent = "Please enter a word to search.";
+          return;
+        }
+
+        const translation = parsedDictionary[searchInput];
+
+        if (translation) {
+          searchResult.textContent = `${translation}`;
+        } else {
+          searchResult.textContent = "Word not found in the dictionary.";
+        }
+      }
+    </script>
+  </body>
+</html>
