@@ -1,15 +1,15 @@
 {
-    "short_name": "AD",
-    "name": "Awesome Dictionary",
-    "icons": [
-        {
-            "src": "/cat-in-hat-144.png",
-            "sizes": "144x144",
-            "type": "image/png"
-        }
-    ],
-    "start_url": "./index.html",
-    "display": "standalone",
-    "theme_color": "#f2efea",
-    "background_color": "#f2efea"
+  "short_name": "AD",
+  "name": "Awesome Dictionary",
+  "icons": [
+    {
+      "src": "./cat-in-hat-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#f2efea",
+  "background_color": "#f2efea"
 }
