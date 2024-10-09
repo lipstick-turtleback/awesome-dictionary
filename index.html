@@ -4,107 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Awesome Dictionary</title>
-    <!--<link rel="stylesheet" href="styles.css" />-->
+    <link rel="stylesheet" href="styles.css" />
     <link rel="manifest" href="manifest.json" />
-    <style>
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-        background-color: #f2efea;
-        padding: 10px;
-        max-width: 500px;
-      }
 
-      hr {
-        border: none;
-        border-top: 1px solid rgb(197, 178, 178);
-      }
-
-      h1 {
-        margin-top: 0px;
-        margin-bottom: 10px;
-        font-family: sans-serif;
-        font-size: 30px;
-        background: linear-gradient(to right,
-            #ef5350,
-            #f48fb1,
-            #7e57c2,
-            #2196f3,
-            #26c6da,
-            #43a047,
-            #ff5722);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-align: center;
-      }
-
-      button,
-      input {
-        padding: 0px;
-        margin: 0px;
-        min-width: 150px;
-        width: 100%;
-      }
-
-      input[type="text"] {
-        padding: 5px;
-        font-size: 20px;
-        height: 40px;
-      }
-
-      img {
-        position: absolute;
-        width: 150px;
-        left: 250px;
-        top: 350px;
-        opacity: 0.5;
-        z-index: 0;
-      }
-
-      textarea {
-        min-height: 475px;
-        max-height: 700px;
-        font-size: 18px;
-        width: 100%;
-        padding: 5px;
-        color: #000;
-        border: 1px solid #aaa;
-        background-image: url("https://png.pngtree.com/png-vector/20240908/ourmid/pngtree-a-cat-dressed-in-hard-hat-and-construction-vest-png-image_13791297.png");
-        background-color: rgba(255, 255, 255, 0.8);
-        background-blend-mode: lighten;
-        background-repeat: no-repeat;
-        background-position: center;
-        overflow-y: auto;
-      }
-
-      .load-csv,
-      .select-csv {
-        display: inline-block;
-        width: 49%;
-      }
-
-      .boxsizingBorder {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-      }
-
-      .div-row {
-        margin-top: 5px;
-      }
-
-      .version-number {
-        position: absolute;
-        left: 2px;
-        bottom: 2px;
-        color: #aaa;
-        font-size: 10px;
-        padding: 2px;
-      }
-
-      iframe {
-        display: none !important;
-      }
-    </style>
   </head>
 
   <body>
@@ -122,7 +24,7 @@
         />
       </div>
       <div class="load-csv">
-        <button onclick="loadCSV()" class="boxsizingBorder">
+        <button onclick="app.loadCSV()" class="boxsizingBorder">
           Read File 🚀
         </button>
       </div>
@@ -136,8 +38,8 @@
         id="searchInput"
         placeholder="search here"
         class="boxsizingBorder"
-        onchange="searchWord()"
-        onkeyup="searchWord()"
+        onchange="app.searchWord()"
+        onkeyup="app.searchWord()"
       />
     </div>
 
@@ -150,97 +52,6 @@
       ></textarea>
     </div>
 
-    <script>
-      let parsedDictionary = [];
-
-      const fileInput = document.getElementById("csvFileInput");
-      const searchResult = document.getElementById("searchResult");
-      const searchInput = document.getElementById("searchInput");
-
-      // Function to load CSV file into memory
-      function loadCSV() {
-        console.log("loadCSV start");
-
-        if (fileInput.files.length === 0) {
-          alert("Please select a CSV file first.");
-          return;
-        }
-
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function (event) {
-          const csvData = event.target.result;
-          parsedDictionary = parseCSV(csvData);
-          searchResult.textContent = "";
-        };
-
-        reader.readAsText(file);
-
-        console.log("loadCSV end");
-      }
-
-      function parseCSV(data) {
-        console.log("parse csv start");
-
-        const rows = data.trim().split("\n");
-        const dictionary = [];
-
-        rows.forEach((row) => {
-          const [key, value] = row.split(",").map((item) => item.trim());
-          dictionary.push({ key, value });
-        });
-
-        console.log("parse csv end");
-
-        alert(`${dictionary.length} records parsed!`);
-
-        return dictionary;
-      }
-
-      // Function to search for an English word and return its Russian translation
-      function searchWord() {
-        let searchString = searchInput.value.trim().toLowerCase();
-
-        if (parsedDictionary.length <= 0) {
-          searchResult.textContent = "Please load csv file first.";
-          return;
-        }
-
-        if (searchString === "") {
-          searchResult.textContent = "Please enter a word to search.";
-          return;
-        }
-
-        if (searchString.length < 3) {
-          searchResult.textContent = "Please enter at least 3 chars.";
-          return;
-        }
-
-        const translations = parsedDictionary.filter(
-          (x) => (x.key + x.value).indexOf(searchString) >= 0
-        );
-
-        if (translations.length < 9) {
-          let translationsString = translations
-            .map((x) => `${x.key} => ${x.value}`)
-            .join("\n");
-
-          searchResult.textContent = `${translationsString}`;
-        }
-      }
-
-      function listenForKeypresses() {
-        document
-          .getElementById("searchInput")
-          .addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-              searchWord();
-            }
-          });
-      }
-
-      listenForKeypresses();
-    </script>
+    <script src="app.js" ></script>
   </body>
 </html>
