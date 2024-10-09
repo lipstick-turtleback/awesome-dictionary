@@ -78,7 +78,7 @@ function getApp() {
     if (translations.length < 49) {
       let translationsString = translations
         .map((x) => `${x.key} => ${x.value}`)
-        .join("\n");
+        .join("\n\n");
 
       searchResultEl.textContent = `${translationsString}`;
     }
