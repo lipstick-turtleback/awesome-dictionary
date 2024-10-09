@@ -38,7 +38,13 @@ function getApp() {
       const lineItems = row.split(itemsSeparator);
       if (lineItems.length > 1) {
         const key = lineItems[0].trim();
-        const value = lineItems[1].trim();
+        lineItems.shift();
+        let allValuesString = lineItems
+          .map((x) => x.trim())
+          .filter((x) => !!x)
+          .join("; ")
+          .trim();
+        const value = allValuesString;
         result.push({ key, value, searchString: `${key} ${value}` });
       }
     });
@@ -75,7 +81,7 @@ function getApp() {
       (x) => x.searchString.indexOf(searchString) >= 0
     );
 
-    if (translations.length < 49) {
+    if (translations.length < 99) {
       let translationsString = translations
         .map((x) => `${x.key} => ${x.value}`)
         .join("\n\n");

@@ -89,7 +89,7 @@ textarea {
 .load-csv,
 .select-csv {
   display: inline-block;
-  width: 49%;
+  flex: 1;
 }
 
 .boxsizingBorder {
