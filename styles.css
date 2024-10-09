@@ -61,11 +61,12 @@ textarea {
   padding: 5px;
   color: #000;
   border: 1px solid #aaa;
-  background-image: url("https://png.pngtree.com/png-vector/20240908/ourmid/pngtree-a-cat-dressed-in-hard-hat-and-construction-vest-png-image_13791297.png");
+  background-image: url("./img/cat-in-hat-144.png");
   background-color: rgba(255, 255, 255, 0.8);
   background-blend-mode: lighten;
   background-repeat: no-repeat;
   background-position: center;
+  background-size: contain;
   overflow-y: auto;
 }
 

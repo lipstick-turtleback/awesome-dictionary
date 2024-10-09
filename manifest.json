@@ -3,7 +3,7 @@
   "name": "Awesome Dictionary",
   "icons": [
     {
-      "src": "./cat-in-hat-144.png",
+      "src": "./img/cat-in-hat-144.png",
       "sizes": "144x144",
       "type": "image/png"
     }
