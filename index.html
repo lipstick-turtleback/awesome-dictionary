@@ -24,7 +24,7 @@
         />
       </div>
       <div class="load-csv">
-        <button onclick="app.loadCSV()" class="boxsizingBorder">
+        <button onclick="app.onReadCsvFileClick()" class="boxsizingBorder">
           Read File 🚀
         </button>
       </div>
@@ -38,8 +38,8 @@
         id="searchInput"
         placeholder="search here"
         class="boxsizingBorder"
-        onchange="app.searchWord()"
-        onkeyup="app.searchWord()"
+        onchange="app.searchTranslations()"
+        onkeyup="app.searchTranslations()"
       />
     </div>
 
