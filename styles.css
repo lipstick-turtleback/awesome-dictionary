@@ -58,7 +58,7 @@ img {
 }
 
 textarea {
-  min-height: 450px;
+  min-height: 50px;
   font-size: 18px;
   line-height: 20px;
   width: 100%;
@@ -88,6 +88,9 @@ textarea {
 .load-csv,
 .select-csv {
   display: inline-block;
+}
+
+.select-csv {
   flex: 1;
 }
 
@@ -104,9 +107,9 @@ textarea {
 
 .version-number {
   display: block;
-  position: relative;
-  left: 5px;
-  bottom: 15px;
-  color: #999;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: #ccc;
   font-size: 10px;
 }
