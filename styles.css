@@ -11,7 +11,8 @@ body {
 
 hr {
   border: none;
-  border-top: 1px solid rgb(197, 178, 178);
+  border-top: 1px solid #aaa;
+  width: 100%;
 }
 
 
