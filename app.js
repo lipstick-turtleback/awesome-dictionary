@@ -1,7 +1,7 @@
 function getApp() {
   let dictionaryItems = [];
 
-  const rowsSeparator = "\n";
+  const ROWS_SEPARATOR = "\n";
   const MAX_RESULTS = 99;
   const MAX_SEPARATOR_DETECTING_DATA = 9999;
   const LOCAL_STORAGE_ITEM_KEY = "recentDictionaryItems";
@@ -78,7 +78,7 @@ function getApp() {
   // Parse CSV content into key-value pairs
   const parseCSVContent = (data = "") => {
     const separator = detectSeparator(data);
-    const rows = data.split(rowsSeparator);
+    const rows = data.split(ROWS_SEPARATOR);
 
     const result = rows
       .map((row) => rowToDictRecordObj(row, separator))
