@@ -1,6 +1,6 @@
 {
-  "short_name": "AD",
-  "name": "Awesome Dictionary",
+  "short_name": "Off Dict",
+  "name": "Offline Dictionary",
   "icons": [
     {
       "src": "./img/book-144.png",
