@@ -8,9 +8,13 @@ function getApp() {
   const tryLoadRecentDict = async () => {
     try {
       let str = window.localStorage?.getItem("recentDictionaryItems");
-      let resoredObj = JSON.parse(str);
-      dictionaryItems = resoredObj;
-      setResultText(`${dictionaryItems.length} lines loaded!`);
+      if (str) {
+        let resoredObj = JSON.parse(str);
+        dictionaryItems = resoredObj;
+        setResultText(`${dictionaryItems.length} lines loaded!`);
+      } else {
+        setResultText(`Start with selecting a CSV file.`);
+      }
     } catch (e) {
       console.log(e);
       alert("Loading of the previously used dictionary data has failed :(");
