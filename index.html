@@ -3,32 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Offline Dictionary</title>
+    <title>Offline Сsv Dictionary</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="manifest" href="manifest.json" />
   </head>
 
   <body>
     <div class="app-container">
-      <h1>Offline Dictionary</h1>
-
-      <div class="div-row">
-        <div class="select-csv">
-          <input
-            type="file"
-            id="csvFileInput"
-            accept=".csv"
-            class="boxsizingBorder"
-          />
-        </div>
-        <div class="load-csv">
-          <button onclick="app.onReadCsvFileClick()" class="boxsizingBorder">
-            Read File
-          </button>
-        </div>
-      </div>
-
-      <hr />
+      <h1>Offline Сsv Dictionary</h1>
 
       <div class="div-row">
         <input
@@ -51,6 +33,23 @@
       </div>
 
       <span class="version-number">v241010</span>
+
+      <div class="div-row">
+        <div class="select-csv">
+          <input
+            type="file"
+            id="csvFileInput"
+            accept=".csv"
+            class="boxsizingBorder"
+          />
+        </div>
+        <div class="load-csv">
+          <button onclick="app.onReadCsvFileClick()" class="boxsizingBorder">
+            Read File
+          </button>
+        </div>
+      </div>
+
       <script src="app.js"></script>
     </div>
   </body>

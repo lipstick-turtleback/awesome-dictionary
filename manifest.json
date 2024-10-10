@@ -1,6 +1,6 @@
 {
-  "short_name": "Off Dict",
-  "name": "Offline Dictionary",
+  "short_name": "Dict",
+  "name": "Offline Сsv Dictionary",
   "icons": [
     {
       "src": "./img/book-144.png",
