@@ -5,57 +5,73 @@ function getApp() {
   const searchResultEl = document.getElementById("searchResult");
   const searchInputEl = document.getElementById("searchInput");
 
+  // Try to load the dictionary from localStorage if available
   const tryLoadRecentDict = async () => {
     try {
-      let str = window.localStorage?.getItem("recentDictionaryItems");
-      if (str) {
-        let resoredObj = JSON.parse(str);
-        dictionaryItems = resoredObj;
+      const storedItems = window.localStorage?.getItem("recentDictionaryItems");
+      if (storedItems) {
+        dictionaryItems = JSON.parse(storedItems);
         setResultText(`${dictionaryItems.length} lines loaded!`);
       } else {
-        setResultText(`Start with selecting a CSV file.`);
+        setResultText("Start by selecting a CSV file.");
       }
     } catch (e) {
-      console.log(e);
-      alert("Loading of the previously used dictionary data has failed :(");
+      console.error("Error loading dictionary from localStorage:", e);
+      alert("Failed to load previously used dictionary data.");
     }
   };
 
-  const fileReaderOnLoad = (event) => {
-    const csvFileContent = event.target.result;
+  // Handle CSV file load
+  const onCsvFileLoad = (event) => {
+    const csvContent = event.target.result;
 
-    dictionaryItems = parseFullCSVContent(csvFileContent);
+    dictionaryItems = parseCSVContent(csvContent);
 
-    let dis = JSON.stringify(dictionaryItems, null, 2);
-    window.localStorage?.setItem("recentDictionaryItems", dis);
-
-    setResultText(`${dictionaryItems.length} lines loaded!`);
+    if (dictionaryItems.length > 0) {
+      const serializedItems = JSON.stringify(dictionaryItems, null, 2);
+      window.localStorage?.setItem("recentDictionaryItems", serializedItems);
+      setResultText(`${dictionaryItems.length} lines loaded!`);
+    } else {
+      setResultText("No valid entries found in the CSV file.");
+    }
   };
 
+  // Handle file selection and reading
   const onReadCsvFileClick = () => {
-    if (fileInputEl.files.length === 0) {
-      alert("Select a CSV file first!");
+    if (!fileInputEl.files.length) {
+      alert("Please select a CSV file first.");
       return;
     }
 
-    const firstSelectedFile = fileInputEl.files[0];
+    const selectedFile = fileInputEl.files[0];
     const fileReader = new FileReader();
-    fileReader.onload = fileReaderOnLoad;
-    fileReader.readAsText(firstSelectedFile);
+    fileReader.onload = onCsvFileLoad;
+    fileReader.readAsText(selectedFile);
   };
 
-  const parseFullCSVContent = (data = "") => {
-    let result = [];
+  const lineSeparator = "\n";
 
-    let c1 = data.split(",").length;
-    let c2 = data.split(";").length;
+  const calcSeparatorChar = (data = "") => {
+    let x = data;
+    if (x.length > 9999) {
+      x = x.substring(0, 9999);
+    }
+
+    let c1 = x.split(",").length;
+    let c2 = x.split(";").length;
 
     let itemsSeparator = c1 > c2 ? "," : ";";
-    const lineSeparator = "\n";
 
-    const rowsStrings = data.split(lineSeparator);
+    return itemsSeparator;
+  };
 
-    rowsStrings.forEach((row) => {
+  const parseCSVContent = (data = "") => {
+    let result = [];
+
+    let itemsSeparator = calcSeparatorChar(data);
+    const rows = data.split(lineSeparator);
+
+    rows.forEach((row) => {
       const lineItems = row.split(itemsSeparator);
       if (lineItems.length > 1) {
         const key = lineItems[0].trim();
@@ -73,48 +89,49 @@ function getApp() {
     return result;
   };
 
-  const getSearchString = () => {
-    let searchString = searchInputEl.value?.trim().toLowerCase();
-    return searchString;
+  // Get search query from input
+  const getSearchQuery = () => searchInputEl.value?.trim().toLowerCase() || "";
+
+  // Set the result text to the searchResultEl
+  const setResultText = (text = "") => {
+    searchResultEl.textContent = text;
   };
 
-  const setResultText = (resultString = "") => {
-    searchResultEl.textContent = resultString;
-  };
-
+  // Search translations from the loaded dictionary
   const searchTranslations = () => {
-    let searchString = getSearchString();
+    const searchString = getSearchQuery();
 
-    if (dictionaryItems.length <= 0) {
-      setResultText("Please load csv file first.");
+    if (!dictionaryItems.length) {
+      setResultText("Please load a CSV file first.");
       return;
     }
 
-    if (searchString === "") {
+    if (!searchString) {
       setResultText("Please enter a word to search.");
       return;
     }
 
     if (searchString.length < 2) {
-      setResultText("Please enter at least 3 chars.");
+      setResultText("Please enter at least 2 characters.");
       return;
     }
 
-    const translations = dictionaryItems.filter(
-      (x) =>
-        x.key.indexOf(searchString) >= 0 || x.value.indexOf(searchString) >= 0
+    const matchingTranslations = dictionaryItems.filter(
+      ({ key, value }) =>
+        key.toLowerCase().includes(searchString) ||
+        value.toLowerCase().includes(searchString)
     );
 
-    if (translations.length < 99) {
-      let result = translations
-        .map((x) => `${x.key} => ${x.value}`)
+    if (!matchingTranslations.length) {
+      setResultText("No matches found.");
+    } else if (matchingTranslations.length > 99) {
+      setResultText(`Too many results! (${matchingTranslations.length})`);
+    } else {
+      const resultText = matchingTranslations
+        .map(({ key, value }) => `${key} => ${value}`)
         .join("\n\n");
 
-      setResultText(result);
-    }
-
-    if (translations.length > 99) {
-      setResultText(`Too many results! (${translations.length})`);
+      setResultText(resultText);
     }
   };
 
