@@ -65,7 +65,7 @@ textarea {
   padding: 5px;
   color: #000;
   background-image: url("./img/cat-in-hat-1024.png");
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   background-blend-mode: lighten;
   background-repeat: no-repeat;
   background-position: center;
