@@ -18,8 +18,6 @@
           id="searchInput"
           placeholder="search here"
           class="boxsizingBorder"
-          onchange="app.searchTranslations()"
-          onkeyup="app.searchTranslations()"
         />
       </div>
 
@@ -44,13 +42,15 @@
           />
         </div>
         <div class="load-csv">
-          <button onclick="app.onReadCsvFileClick()" class="boxsizingBorder">
-            Read File
-          </button>
+          <button id="readFileButton" class="boxsizingBorder">Read File</button>
         </div>
       </div>
 
-      <script src="app.js"></script>
+      <script type="module">
+        import { app } from "./app.js";
+        app.attachEventHandlers();
+        app.tryLoadRecentDict();
+      </script>
     </div>
   </body>
 </html>

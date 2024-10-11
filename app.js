@@ -1,170 +1,172 @@
-function getApp() {
-  let dictionaryItems = [];
+import * as config from "./config.js";
 
-  const ROWS_SEPARATOR = "\n";
-  const MAX_RESULTS = 99;
-  const MAX_SEPARATOR_DETECTING_DATA = 9999;
-  const LOCAL_STORAGE_ITEM_KEY = "recentDictionaryItems";
+let dictionaryItems = [];
 
-  const fileInputEl = document.getElementById("csvFileInput");
-  const searchResultEl = document.getElementById("searchResult");
-  const searchInputEl = document.getElementById("searchInput");
+const fileInputEl = document.getElementById("csvFileInput");
+const searchResultEl = document.getElementById("searchResult");
+const searchInputEl = document.getElementById("searchInput");
+const readFileButtonEl = document.getElementById("readFileButton");
 
-  // Try to load the dictionary from localStorage if available
-  const tryLoadRecentDict = async () => {
-    try {
-      const storedItems = localStorage.getItem(LOCAL_STORAGE_ITEM_KEY);
-      if (storedItems) {
-        dictionaryItems = JSON.parse(storedItems);
-        setResultText(`${dictionaryItems.length} lines loaded!`);
-      } else {
-        setResultText("Start by selecting a CSV file.");
-      }
-    } catch (error) {
-      handleError("Error loading dictionary from localStorage", error);
-    }
-  };
+// Attach event hadlers
+const attachEventHandlers = () => {
+  searchInputEl.addEventListener("change", searchTranslations);
+  searchInputEl.addEventListener("keyup", searchTranslations);
+  readFileButtonEl.addEventListener("click", onReadCsvFileClick);
+};
 
-  // Handle CSV file load and store the parsed content
-  const onCsvFileLoad = (event) => {
-    const csvContent = event.target.result;
-    const parsedItems = parseCSVContent(csvContent);
-
-    if (parsedItems.length > 0) {
-      dictionaryItems = parsedItems;
-      saveDictionaryItems();
+// Try to load the dictionary from localStorage if available
+const tryLoadRecentDict = async () => {
+  try {
+    const storedItems = localStorage.getItem(config.LOCAL_STORAGE_ITEM_KEY);
+    if (storedItems) {
+      dictionaryItems = JSON.parse(storedItems);
       setResultText(`${dictionaryItems.length} lines loaded!`);
     } else {
-      setResultText("No valid entries found in the CSV file.");
+      setResultText("Start by selecting a CSV file.");
     }
-  };
+  } catch (error) {
+    handleError("Error loading dictionary from localStorage", error);
+  }
+};
 
-  // Handle file selection and reading
-  const onReadCsvFileClick = () => {
-    const selectedFile = fileInputEl?.files?.[0];
-    if (!selectedFile) {
-      alert("Please select a CSV file first.");
-      return;
-    }
+// Handle CSV file load and store the parsed content
+const onCsvFileLoad = (event) => {
+  const csvContent = event.target.result;
+  const parsedItems = parseCSVContent(csvContent);
 
-    const fileReader = new FileReader();
-    fileReader.onload = onCsvFileLoad;
-    fileReader.readAsText(selectedFile);
-  };
+  if (parsedItems.length > 0) {
+    dictionaryItems = parsedItems;
+    saveDictionaryItems();
+    setResultText(`${dictionaryItems.length} lines loaded!`);
+  } else {
+    setResultText("No valid entries found in the CSV file.");
+  }
+};
 
-  // Detect CSV delimiter (comma or semicolon)
-  const detectSeparator = (data = "") => {
-    const snippet = data.slice(0, MAX_SEPARATOR_DETECTING_DATA);
-    const commaCount = (snippet.match(/,/g) || []).length;
-    const semicolonCount = (snippet.match(/;/g) || []).length;
+// Handle file selection and reading
+const onReadCsvFileClick = () => {
+  const selectedFile = fileInputEl?.files?.[0];
+  if (!selectedFile) {
+    alert("Please select a CSV file first.");
+    return;
+  }
 
-    const result = commaCount > semicolonCount ? "," : ";";
+  const fileReader = new FileReader();
+  fileReader.onload = onCsvFileLoad;
+  fileReader.readAsText(selectedFile);
+};
 
-    return result;
-  };
+// Detect CSV delimiter (comma or semicolon)
+const detectSeparator = (data = "") => {
+  const snippet = data.slice(0, config.MAX_SEPARATOR_DETECTING_DATA);
+  const commaCount = (snippet.match(/,/g) || []).length;
+  const semicolonCount = (snippet.match(/;/g) || []).length;
 
-  // Convert a row into a key-value object
-  const rowToDictRecordObj = (row = "", separator = ",") => {
-    const [key, ...values] = row.split(separator).map((item) => item.trim());
+  const result = commaCount > semicolonCount ? "," : ";";
 
-    if (!key || values.length === 0) {
-      return null;
-    }
+  return result;
+};
 
-    const value = values.filter(Boolean).join("; ");
-    return { key, value };
-  };
+// Convert a row into a key-value object
+const rowToDictRecordObj = (row = "", separator = ",") => {
+  const [key, ...values] = row.split(separator).map((item) => item.trim());
 
-  // Parse CSV content into key-value pairs
-  const parseCSVContent = (data = "") => {
-    const separator = detectSeparator(data);
-    const rows = data.split(ROWS_SEPARATOR);
+  if (!key || values.length === 0) {
+    return null;
+  }
 
-    const result = rows
-      .map((row) => rowToDictRecordObj(row, separator))
-      .filter(Boolean);
+  const value = values.filter(Boolean).join("; ");
+  return { key, value };
+};
 
-    return result;
-  };
+// Parse CSV content into key-value pairs
+const parseCSVContent = (data = "") => {
+  const separator = detectSeparator(data);
+  const rows = data.split(config.ROWS_SEPARATOR);
 
-  // Get search query from input
-  const getSearchQuery = () => {
-    const result = searchInputEl?.value?.trim().toLowerCase() || "";
-    return result;
-  };
+  const result = rows
+    .map((row) => rowToDictRecordObj(row, separator))
+    .filter(Boolean);
 
-  // Set the result text to the searchResultEl
-  const setResultText = (text = "") => {
-    searchResultEl.textContent = text;
-  };
+  return result;
+};
 
-  // Save dictionary items to localStorage
-  const saveDictionaryItems = () => {
-    try {
-      localStorage.setItem(
-        LOCAL_STORAGE_ITEM_KEY,
-        JSON.stringify(dictionaryItems, null, 2)
-      );
-    } catch (error) {
-      handleError("Error saving dictionary to localStorage", error);
-    }
-  };
+// Get search query from input
+const getSearchQuery = () => {
+  const result = searchInputEl?.value?.trim().toLowerCase() || "";
+  return result;
+};
 
-  // Handle errors
-  const handleError = (message, error) => {
-    console.error(message, error);
-    alert(message);
-  };
+// Set the result text to the searchResultEl
+const setResultText = (text = "") => {
+  searchResultEl.textContent = text;
+};
 
-  // Search translations from the loaded dictionary
-  const searchTranslations = () => {
-    const searchQuery = getSearchQuery();
-
-    if (!dictionaryItems.length) {
-      setResultText("Please load a CSV file first.");
-      return;
-    }
-
-    if (!searchQuery) {
-      setResultText("Please enter a word to search.");
-      return;
-    }
-
-    if (searchQuery.length < 2) {
-      setResultText("Please enter at least 2 characters.");
-      return;
-    }
-
-    const results = dictionaryItems.filter(
-      ({ key, value }) =>
-        key.toLowerCase().includes(searchQuery) ||
-        value.toLowerCase().includes(searchQuery)
+// Save dictionary items to localStorage
+const saveDictionaryItems = () => {
+  try {
+    localStorage.setItem(
+      config.LOCAL_STORAGE_ITEM_KEY,
+      JSON.stringify(dictionaryItems, null, 2)
     );
+  } catch (error) {
+    handleError("Error saving dictionary to localStorage", error);
+  }
+};
 
-    if (!results.length) {
-      setResultText("No matches found.");
-      return;
-    }
+// Handle errors
+const handleError = (message, error) => {
+  console.error(message, error);
+  alert(message);
+};
 
-    if (results.length > MAX_RESULTS) {
-      setResultText(`Too many results! (${results.length})`);
-      return;
-    }
+// Search translations from the loaded dictionary
+const searchTranslations = () => {
+  const searchQuery = getSearchQuery();
 
-    const formattedResults = results
-      .map(({ key, value }) => `${key} => ${value}`)
-      .join("\n\n");
+  if (!dictionaryItems.length) {
+    setResultText("Please load a CSV file first.");
+    return;
+  }
 
-    setResultText(formattedResults);
-  };
+  if (!searchQuery) {
+    setResultText("Please enter a word to search.");
+    return;
+  }
 
-  return {
-    onReadCsvFileClick,
-    searchTranslations,
-    tryLoadRecentDict,
-  };
-}
+  if (searchQuery.length < 2) {
+    setResultText("Please enter at least 2 characters.");
+    return;
+  }
 
-// Initialize app
-const app = getApp();
-app.tryLoadRecentDict();
+  const results = dictionaryItems.filter(
+    ({ key, value }) =>
+      key.toLowerCase().includes(searchQuery) ||
+      value.toLowerCase().includes(searchQuery)
+  );
+
+  if (!results.length) {
+    setResultText("No matches found.");
+    return;
+  }
+
+  if (results.length > config.MAX_RESULTS) {
+    setResultText(`Too many results! (${results.length})`);
+    return;
+  }
+
+  const formattedResults = results
+    .map(({ key, value }) => `${key} => ${value}`)
+    .join("\n\n");
+
+  setResultText(formattedResults);
+};
+
+const app = {
+  attachEventHandlers,
+  onReadCsvFileClick,
+  searchTranslations,
+  tryLoadRecentDict,
+};
+
+export { app };
