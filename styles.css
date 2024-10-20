@@ -86,7 +86,6 @@ img {
   font-size: 10px;
 }
 
-
 #searchInput {
   padding: 5px 10px;
   font-size: 25px;
@@ -96,7 +95,7 @@ img {
 
 #searchResult {
   margin: 0;
-  padding: 0 10px;
+  padding: 10px;
   white-space: pre-line;
   font-size: 16px;
 }
