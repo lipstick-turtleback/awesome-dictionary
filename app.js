@@ -99,7 +99,7 @@ const getSearchQuery = () => {
 
 // Set the result text to the searchResultEl
 const setResultText = (text = "") => {
-  searchResultEl.textContent = text;
+  searchResultEl.innerHTML = text;
 };
 
 // Save dictionary items to localStorage
@@ -118,6 +118,24 @@ const saveDictionaryItems = () => {
 const handleError = (message, error) => {
   console.error(message, error);
   alert(message);
+};
+
+// Redners results as html
+const renderResults = (results) => {
+  const divider = "=>";
+
+  const formattedResults = results
+    .map(
+      ({ key, value }) => `
+          <div class="r">
+            <span class="k">${key}</span>
+            <span class="d">${divider}</span>
+            <span class="v">${value}</span>
+          </div>`
+    )
+    .join("\n");
+
+  setResultText(formattedResults);
 };
 
 // Search translations from the loaded dictionary
@@ -155,11 +173,7 @@ const searchTranslations = () => {
     return;
   }
 
-  const formattedResults = results
-    .map(({ key, value }) => `${key} => ${value}`)
-    .join("\n\n");
-
-  setResultText(formattedResults);
+  renderResults(results);
 };
 
 const app = {

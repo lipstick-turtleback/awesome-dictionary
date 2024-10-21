@@ -109,6 +109,22 @@ img {
 #searchResult {
   margin: 0;
   padding: 5px;
-  white-space: pre-line;
   font-size: 16px;
+}
+
+.r {
+  padding: 5px 0;
+}
+
+.r .k {
+  color: #a33;
+}
+
+.r .d {
+  color: #aaa;
+  margin: 0 7px;
+}
+
+.r .v {
+  color: #33a;
 }
