@@ -130,16 +130,16 @@ const escapeHtml = (unsafe) => {
     .replace(/'/g, "&#039;");
 };
 
+const divider = "~";
+
 // Redners results as html
 const renderResults = (results) => {
-  const divider = "=>";
-
   const formattedResults = results
     .map(
       ({ key, value }) => `
           <div class="r">
             <span class="k">${escapeHtml(key)}</span>
-            <span class="d">${escapeHtml(divider)}</span>
+            <span class="d">${divider}</span>
             <span class="v">${escapeHtml(value)}</span>
           </div>`
     )
