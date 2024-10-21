@@ -1,4 +1,4 @@
-import * as config from "./config.js";
+import * as config from "./app-config.js";
 
 let dictionaryItems = [];
 
