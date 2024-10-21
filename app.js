@@ -120,6 +120,16 @@ const handleError = (message, error) => {
   alert(message);
 };
 
+// Utility function to escape HTML special characters
+const escapeHtml = (unsafe) => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
 // Redners results as html
 const renderResults = (results) => {
   const divider = "=>";
@@ -128,9 +138,9 @@ const renderResults = (results) => {
     .map(
       ({ key, value }) => `
           <div class="r">
-            <span class="k">${key}</span>
-            <span class="d">${divider}</span>
-            <span class="v">${value}</span>
+            <span class="k">${escapeHtml(key)}</span>
+            <span class="d">${escapeHtml(divider)}</span>
+            <span class="v">${escapeHtml(value)}</span>
           </div>`
     )
     .join("\n");
