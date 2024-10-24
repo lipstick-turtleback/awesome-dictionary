@@ -11,6 +11,7 @@ const textTransformSwitchEl = document.getElementById("textTransformSwitch");
 const textTransformOptions = ["none", "lowercase", "uppercase"];
 let selectedtextTransformOption = 0;
 
+// Switches text transform class
 const onTextTransformSwitchClick = async (event) => {
   onKeyValueClick(event);
 
@@ -172,19 +173,23 @@ const escapeHtml = (unsafe) => {
 
 const divider = "~";
 
-// Redners results as html
-const renderResults = (results) => {
-  const formattedResults = results
-    .map(
-      ({ key, value }) => `
-          <div class="r">
+// Renders key/value pair as html string
+const keyValueToHtmlString = ({ key, value }) => {
+  let valuesStrings = escapeHtml(value).split(";");
+  let valuesHtml = valuesStrings.join(
+    `</span><span class="d">;</span><span class="v">`
+  );
+
+  return `<div class="r">
             <span class="k">${escapeHtml(key)}</span>
             <span class="d">${divider}</span>
-            <span class="v">${escapeHtml(value)}</span>
-          </div>`
-    )
-    .join("\n");
+            <span class="v">${valuesHtml}</span>
+          </div>`;
+};
 
+// Renders all results as html
+const renderResults = (results) => {
+  const formattedResults = results.map(keyValueToHtmlString).join("\n");
   setResultText(formattedResults);
 };
 
