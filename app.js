@@ -6,6 +6,24 @@ const fileInputEl = document.getElementById("csvFileInput");
 const searchResultEl = document.getElementById("searchResult");
 const searchInputEl = document.getElementById("searchInput");
 const readFileButtonEl = document.getElementById("readFileButton");
+const textTransformSwitchEl = document.getElementById("textTransformSwitch");
+
+const textTransformOptions = ["none", "lowercase", "uppercase"];
+let selectedtextTransformOption = 0;
+
+const onTextTransformSwitchClick = async (event) => {
+  onKeyValueClick(event);
+
+  document.body.classList.remove(
+    textTransformOptions[selectedtextTransformOption]
+  );
+
+  selectedtextTransformOption = (selectedtextTransformOption + 1) % 3;
+
+  document.body.classList.add(
+    textTransformOptions[selectedtextTransformOption]
+  );
+};
 
 // Copies to clipboard the clicked key or value text
 const onKeyValueClick = async (event) => {
@@ -13,7 +31,7 @@ const onKeyValueClick = async (event) => {
     const elClasses = event?.target?.classList;
     if (elClasses.contains("k") || elClasses.contains("v")) {
       const text = event?.target?.innerText;
-      console.log("click ->", text);
+      console.log(`click -> copy -> ${text}`);
 
       navigator.clipboard.writeText(text);
       event.target.classList.add("clicked-text");
@@ -33,6 +51,7 @@ const attachEventHandlers = () => {
   searchInputEl.addEventListener("keyup", searchTranslations);
   readFileButtonEl.addEventListener("click", onReadCsvFileClick);
   searchResultEl.addEventListener("click", onKeyValueClick);
+  textTransformSwitchEl.addEventListener("click", onTextTransformSwitchClick);
 };
 
 // Try to load the dictionary from localStorage if available
