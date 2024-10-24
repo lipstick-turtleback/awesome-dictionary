@@ -7,11 +7,32 @@ const searchResultEl = document.getElementById("searchResult");
 const searchInputEl = document.getElementById("searchInput");
 const readFileButtonEl = document.getElementById("readFileButton");
 
+// Copies to clipboard the clicked key or value text
+const onKeyValueClick = async (event) => {
+  try {
+    const elClasses = event?.target?.classList;
+    if (elClasses.contains("k") || elClasses.contains("v")) {
+      const text = event?.target?.innerText;
+      console.log("click ->", text);
+
+      navigator.clipboard.writeText(text);
+      event.target.classList.add("clicked-text");
+
+      setTimeout(() => {
+        event.target.classList.remove("clicked-text");
+      }, 500);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 // Attach event hadlers
 const attachEventHandlers = () => {
   searchInputEl.addEventListener("change", searchTranslations);
   searchInputEl.addEventListener("keyup", searchTranslations);
   readFileButtonEl.addEventListener("click", onReadCsvFileClick);
+  searchResultEl.addEventListener("click", onKeyValueClick);
 };
 
 // Try to load the dictionary from localStorage if available
