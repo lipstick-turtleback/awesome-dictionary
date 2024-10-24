@@ -11,7 +11,7 @@ body {
 
 body.uppercase {
   text-transform: uppercase;
-} 
+}
 
 body.lowercase {
   text-transform: lowercase;
@@ -129,6 +129,7 @@ img {
   display: inline-block;
 }
 
+#textTransformSwitch:hover,
 .r .k:hover,
 .r .v:hover {
   text-decoration: underline;
